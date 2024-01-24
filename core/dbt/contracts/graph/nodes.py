@@ -46,7 +46,6 @@ from dbt.contracts.graph.unparsed import (
     UnitTestOutputFixture,
 )
 from dbt.contracts.graph.node_args import ModelNodeArgs
-from dbt.contracts.graph.semantic_layer_common import WhereFilterIntersection
 from dbt.contracts.util import Replaceable
 from dbt_common.contracts.config.properties import AdditionalPropertiesMixin
 from dbt_common.events.functions import warn_or_error
@@ -97,7 +96,11 @@ from .model_config import (
     SavedQueryConfig,
 )
 
-from dbt.artifacts.resources import BaseArtifactNode, Documentation as DocumentationContract
+from dbt.artifacts.resources import (
+    BaseArtifactNode,
+    Documentation as DocumentationContract,
+    WhereFilterIntersection as WhereFilterIntersectionArtifact,
+)
 
 
 # =====================================================================
@@ -1510,7 +1513,7 @@ class Exposure(GraphNode):
 @dataclass
 class MetricInputMeasure(dbtClassMixin):
     name: str
-    filter: Optional[WhereFilterIntersection] = None
+    filter: Optional[WhereFilterIntersectionArtifact] = None
     alias: Optional[str] = None
     join_to_timespine: bool = False
     fill_nulls_with: Optional[int] = None
@@ -1531,7 +1534,7 @@ class MetricTimeWindow(dbtClassMixin):
 @dataclass
 class MetricInput(dbtClassMixin):
     name: str
-    filter: Optional[WhereFilterIntersection] = None
+    filter: Optional[WhereFilterIntersectionArtifact] = None
     alias: Optional[str] = None
     offset_window: Optional[MetricTimeWindow] = None
     offset_to_grain: Optional[TimeGranularity] = None
@@ -1579,7 +1582,7 @@ class Metric(GraphNode):
     label: str
     type: MetricType
     type_params: MetricTypeParams
-    filter: Optional[WhereFilterIntersection] = None
+    filter: Optional[WhereFilterIntersectionArtifact] = None
     metadata: Optional[SourceFileMetadata] = None
     resource_type: Literal[NodeType.Metric]
     meta: Dict[str, Any] = field(default_factory=dict)
